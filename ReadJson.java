@@ -49,15 +49,11 @@ public class ReadJson {
             while (reader.hasNext())
             {
                 String arrayListItemKey = reader.readString().trim();
-                if (arrayListItemKey.equals("device_id")){
-                    reader.readObject();
-                    continue;
-                }
                 String arrayListItemValue = "";
                 try{
                     arrayListItemValue = reader.readObject().toString().trim();
                 }catch (NullPointerException e){
-                    arrayListItemKey = "null";
+                    arrayListItemValue = "null";
                 }
 
                 if (arrayListItemKey.equals("query")){
@@ -85,10 +81,19 @@ public class ReadJson {
                 }
             }
             StringBuffer sb = new StringBuffer();
-            sb.append(oneQuery.getQuery());
-            sb.append("&&&");
-            sb.append(oneQuery.getDomain());
-            ps.println(sb.toString());
+            boolean b1 = oneQuery.getQuery()!=null && oneQuery.getDomain()!=null;
+
+            if (b1){
+                boolean b2 = !oneQuery.getQuery().equals("") && !oneQuery.getDomain().equals("");
+                boolean b3 = !oneQuery.getQuery().equals("null") && !oneQuery.getDomain().equals("null");
+
+                if (b2 && b3){
+                    sb.append(oneQuery.getQuery());
+                    sb.append("&&&");
+                    sb.append(oneQuery.getDomain());
+                    ps.println(sb.toString());
+                }
+            }
             reader.endObject();
         }
         reader.endArray();
